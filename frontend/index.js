@@ -1,6 +1,7 @@
 const socket = io("http://localhost:3000");
 
 socket.on("init", handleInit);
+socket.on("gameState", handleGameState);
 
 const BACKGROUND = " #1c0e22";
 const FOOD_COLOUR = "#ffffffff";
@@ -82,6 +83,11 @@ function drawSnake(playerState, size, colour) {
 
 function handleInit(message) {
   console.log(message);
+}
+
+function handleGameState(gameState) {
+  game = JSON.parse(gameState);
+  requestAnimationFrame(() => drawGameCanvas(gameState));
 }
 
 init();
