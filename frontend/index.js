@@ -1,3 +1,7 @@
+const socket = io("http://localhost:3000");
+
+socket.on("init", handleInit);
+
 const BACKGROUND = " #1c0e22";
 const FOOD_COLOUR = "#ffffffff";
 const SNAKE_COLOUR = "#01cfc2";
@@ -74,6 +78,10 @@ function drawSnake(playerState, size, colour) {
   for (let cell of snake) {
     ctx.fillRect(cell.x * size, cell.y * size, size, size);
   }
+}
+
+function handleInit(message) {
+  console.log(message);
 }
 
 init();
