@@ -1,4 +1,4 @@
-const BACKGROUND = "#f0e8e0";
+const BACKGROUND = " #1c0e22";
 
 const gameScreen = document.getElementById("gameScreen");
 
@@ -6,7 +6,7 @@ let canvas, ctx;
 
 function init() {
   // initialisation
-  canvas = document.getElementById("canvas");
+  canvas = document.getElementById("gameCanvas");
   ctx = canvas.getContext("2d");
 
   canvas.width = canvas.height = 600;
