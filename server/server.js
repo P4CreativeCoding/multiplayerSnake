@@ -1,7 +1,43 @@
 const io = require("socket.io")();
+const { createGameState, gameLoop, getUpdatedVelocity } = require("./game.js");
+const { FRAME_RATE } = require("./constants.js");
 
 io.on("connection", (client) => {
   client.emit("init", { data: "test" });
+
+  const state = createGameState();
+
+  client.on("keydown", handleKeydown);
+
+  function handleKeydown(keyCode) {
+    try {
+      keyCode = parseInt(keyCode);
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+
+    let velocity = getUpdatedVelocity(keyCode);
+
+    if (velocity) {
+      state.player.velocity = velocity;
+    }
+  }
+
+  startGameInterval(client, state);
 });
 
-io.listen(3000);
+function startGameInterval(client, state) {
+  const intervalID = setInterval(() => {
+    const winner = gameLoop(client, state);
+
+    if (!winner) {
+      client.emit("gameState", JSON.stringify(state));
+    } else {
+      client.emit("gameOver");
+      clearInterval(intervalID);
+    }
+  }, 2000 / FRAME_RATE);
+}
+
+io.listen(8080);

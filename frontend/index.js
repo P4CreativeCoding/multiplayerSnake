@@ -1,14 +1,42 @@
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:8080");
 
 socket.on("init", handleInit);
+socket.on("gameState", handleGamestate);
+socket.on("gameOver", handleGameOver);
 
 const BACKGROUND = " #1c0e22";
 const FOOD_COLOUR = "#ffffffff";
 const SNAKE_COLOUR = "#01cfc2";
 
 const gameScreen = document.getElementById("gameScreen");
+const initialScreen = document.getElementById("startScreen");
+const newGameBtn = document.getElementById("newGameBtn");
+const joinGameBtn = document.getElementById("joinGameBtn");
+const gameCodeInput = document.getElementById("gameCodeInput");
+const gameCodeDisplay = document.getElementById("gameCodeDisplay");
+
+newGameBtn.addEventListener("click", newGame);
+joinGameBtn.addEventListener("click", joinGame);
 
 let canvas, ctx;
+
+function newGame() {}
+
+function joinGame() {}
+
+function init() {
+  // initialisation
+  canvas = document.getElementById("gameCanvas");
+  ctx = canvas.getContext("2d");
+
+  canvas.width = canvas.height = 600;
+  ctx.fillStyle = BACKGROUND;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  document.addEventListener("keydown", keydown);
+}
+
+init(); // call init
 
 // game informations
 let gameState = {
@@ -35,20 +63,9 @@ let gameState = {
   gridSize: 20, // number of pixels in game
 };
 
-function init() {
-  // initialisation
-  canvas = document.getElementById("gameCanvas");
-  ctx = canvas.getContext("2d");
-
-  canvas.width = canvas.height = 600;
-  ctx.fillStyle = BACKGROUND;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  document.addEventListener("keydown", keydown);
-}
-
 function keydown(keyEvent) {
   console.log(keyEvent.keyCode);
+  socket.emit("keydown", keyEvent.keyCode);
 }
 
 function drawGameCanvas(state) {
@@ -84,6 +101,11 @@ function handleInit(message) {
   console.log(message);
 }
 
-init();
+function handleGamestate(gameState) {
+  gameState = JSON.parse(gameState);
+  requestAnimationFrame(() => drawGameCanvas(gameState));
+}
 
-drawGameCanvas(gameState);
+function handleGameOver() {
+  alert("You lose");
+}
