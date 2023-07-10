@@ -11,6 +11,12 @@
     />
 
     <style>
+      #gameScreen {
+        display: none;
+      }
+    </style>
+    >
+    <style>
       canvas {
         border: 1px solid black;
       }
@@ -19,6 +25,27 @@
   <body>
     <section class="vh-100">
       <div class="container h-100">
+        <div id="startScreen" class="h-100">
+          <div
+            class="d-flex flex-column align-items-center justify-content-center h-100"
+          >
+            <h1>Multiplayer Snake</h1>
+            <button type="submit" class="btn btn-info" id="newGameBtn">
+              Create New Game
+            </button>
+            <div>OR</div>
+            <div class="form-group">
+              <input
+                type="text"
+                placeholder="Enter Game Code"
+                id="gameCodeInput"
+              />
+            </div>
+            <button type="submit" class="btn btn-info" id="joinGameBtn">
+              Join Game
+            </button>
+          </div>
+        </div>
         <div id="gameScreen" class="h-100">
           <div
             class="d-flex flex-column align-items-center justify-content-center h-100"
