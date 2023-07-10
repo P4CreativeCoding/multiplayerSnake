@@ -14,8 +14,42 @@
       #gameScreen {
         display: none;
       }
+
+      body {
+        background-color: black;
+      }
+
+      h1 {
+        color: lightblue;
+        margin-bottom: 20%;
+      }
+      button {
+        background-color: rgb(163, 163, 194);
+        border: 0;
+        height: 50px;
+        width: 30%;
+        border-radius: 10px;
+
+        transition-duration: 0.4s;
+      }
+
+      .button:hover {
+        background-color: white;
+        color: grey;
+      }
+
+      .infoText {
+        margin: 5%;
+        color: gray;
+      }
+      .input {
+        margin-bottom: 5%;
+        background-color: lightcyan;
+        border: 1px solid grey;
+        border-radius: 10px;
+      }
     </style>
-    >
+
     <style>
       canvas {
         border: 1px solid black;
@@ -30,20 +64,17 @@
             class="d-flex flex-column align-items-center justify-content-center h-100"
           >
             <h1>Multiplayer Snake</h1>
-            <button type="submit" class="btn btn-info" id="newGameBtn">
-              Create New Game
-            </button>
-            <div>OR</div>
+            <button type="submit" id="newGameBtn">Create New Game</button>
+            <div class="infoText">OR</div>
             <div class="form-group">
               <input
                 type="text"
+                class="input"
                 placeholder="Enter Game Code"
                 id="gameCodeInput"
               />
             </div>
-            <button type="submit" class="btn btn-info" id="joinGameBtn">
-              Join Game
-            </button>
+            <button type="submit" id="joinGameBtn">Join Game</button>
           </div>
         </div>
         <div id="gameScreen" class="h-100">
