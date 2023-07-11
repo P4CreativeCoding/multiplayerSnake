@@ -22,3 +22,6 @@ You can start a room for two players and it will give you a code to share with a
 ## Functionality and Usecases
 
 ![functionaliy](./functionality.png)
+
+#### Sources
+- [Multiplayer Snake by HungryTurtleCode](https://github.com/HungryTurtleCode/multiplayerSnake)
