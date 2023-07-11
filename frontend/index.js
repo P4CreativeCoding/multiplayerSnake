@@ -52,32 +52,6 @@ function init() {
   gameActive = true;
 }
 
-/*
-// game informations
-let gameState = {
-  player: {
-    pos: {
-      // head position
-      posX: 3,
-      posY: 10,
-    },
-    velocity: {
-      velX: 1,
-      velY: 0,
-    },
-    snakeParts: [
-      { x: 1, y: 10 },
-      { x: 2, y: 10 },
-      { x: 3, y: 10 }, // head
-    ],
-  },
-  food: {
-    posX: 7,
-    posY: 7,
-  },
-  gridSize: 20, // number of pixels in game
-};*/
-
 function keydown(keyEvent) {
   console.log(keyEvent.keyCode);
   socket.emit("keydown", keyEvent.keyCode);
