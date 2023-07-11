@@ -56,7 +56,7 @@ function createGameState() {
   };
 }
 
-function gameLoop(client, state) {
+function gameLoop(state) {
   if (!state) {
     return;
   }
@@ -112,11 +112,11 @@ function gameLoop(client, state) {
   }
 
   // Move the snake's head to the new position P1
-  playerOne.snakeParts.push(newHeadPositionP1);
+  playerOne.snakeParts.unshift(newHeadPositionP1);
   playerOne.pos.posX = newHeadPositionP1.x;
   playerOne.pos.posY = newHeadPositionP1.y;
   // Move the snake's head to the new position P2
-  playerTwo.snakeParts.push(newHeadPositionP2);
+  playerTwo.snakeParts.unshift(newHeadPositionP2);
   playerTwo.pos.posX = newHeadPositionP2.x;
   playerTwo.pos.posY = newHeadPositionP2.y;
 
@@ -129,7 +129,7 @@ function gameLoop(client, state) {
     randomFood(state); // new food
   } else {
     // Remove the tail of the snake
-    playerOne.snakeParts.shift();
+    playerOne.snakeParts.pop();
   }
 
   // Check if the snake's head collides with the food P2
@@ -141,7 +141,7 @@ function gameLoop(client, state) {
     randomFood(state); // new food
   } else {
     // Remove the tail of the snake
-    playerTwo.snakeParts.shift();
+    playerTwo.snakeParts.pop();
   }
 
   return false;
