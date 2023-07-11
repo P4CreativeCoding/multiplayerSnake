@@ -88,7 +88,7 @@ function startGameInterval(roomName) {
       emitGameState(roomName, state[roomName]);
       // client.emit("gameState", JSON.stringify(state));
     } else {
-      emitGameState(roomName, winner);
+      emitGameOver(roomName, winner);
       state[roomName] = null;
       // client.emit("gameOver");
       clearInterval(intervalID);
@@ -101,7 +101,7 @@ function emitGameState(roomName, state) {
 }
 
 function emitGameOver(roomName, winner) {
-  io.sockets.in(room).emit("gameOver", { winner });
+  io.sockets.in(roomName).emit("gameOver", { winner });
 }
 
 io.listen(8080);

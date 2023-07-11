@@ -19,7 +19,6 @@ function createGameState() {
     players: [
       {
         pos: {
-          // head position
           posX: 3,
           posY: 10,
         },
@@ -30,12 +29,11 @@ function createGameState() {
         snakeParts: [
           { x: 1, y: 10 },
           { x: 2, y: 10 },
-          { x: 3, y: 10 }, // head
+          { x: 3, y: 10 },
         ],
       },
       {
         pos: {
-          // head position
           posX: 12,
           posY: 15,
         },
@@ -46,12 +44,12 @@ function createGameState() {
         snakeParts: [
           { x: 1, y: 15 },
           { x: 2, y: 15 },
-          { x: 3, y: 15 }, // head
+          { x: 3, y: 15 },
         ],
       },
     ],
-    food: {},
-    gridSize: GRID_SIZE, // number of pixels in game
+    food: { posX: null, posY: null },
+    gridSize: GRID_SIZE,
     active: true,
   };
 }
