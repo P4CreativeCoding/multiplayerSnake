@@ -140,6 +140,8 @@ function handleGameOver(data) {
     alert("You lost :(");
   }
   gameActive = false;
+
+  reset();
 }
 
 function handleUnknownGame() {
