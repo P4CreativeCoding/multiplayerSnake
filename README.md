@@ -4,6 +4,10 @@
 
 ---
 
+[Play here](https://p4creativecoding.github.io/multiplayerSnake_Hartmann/frontend/)
+
+---
+
 ## What's this?
 
 MULTIPLAYER SNAKE!
