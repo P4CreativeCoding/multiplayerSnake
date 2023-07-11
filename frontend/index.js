@@ -3,6 +3,7 @@ const socket = io("http://localhost:8080");
 socket.on("init", handleInit);
 socket.on("gameState", handleGamestate);
 socket.on("gameOver", handleGameOver);
+socket.on("gameCode", handleGameCode);
 
 const BACKGROUND = " #1c0e22";
 const FOOD_COLOUR = "#ffffffff";
@@ -19,13 +20,24 @@ newGameBtn.addEventListener("click", newGame);
 joinGameBtn.addEventListener("click", joinGame);
 
 let canvas, ctx;
+let playerNumber;
 
-function newGame() {}
+function newGame() {
+  socket.emit("newGame");
+  init();
+}
 
-function joinGame() {}
+function joinGame() {
+  const gameCode = gameCodeInput.value;
+  socket.emit("joinGame", code);
+  init();
+}
 
 function init() {
   // initialisation
+  initialScreen.style.display = "none";
+  gameScreen.style.display = "block";
+
   canvas = document.getElementById("gameCanvas");
   ctx = canvas.getContext("2d");
 
@@ -35,8 +47,6 @@ function init() {
 
   document.addEventListener("keydown", keydown);
 }
-
-init(); // call init
 
 // game informations
 let gameState = {
@@ -97,8 +107,13 @@ function drawSnake(playerState, size, colour) {
   }
 }
 
-function handleInit(message) {
-  console.log(message);
+function handleInit(number) {
+  console.log(number);
+  playerNumber = number;
+}
+
+function handleGameCode(gameCode) {
+  gameCodeDisplay.innerText = gameCode;
 }
 
 function handleGamestate(gameState) {

@@ -1,10 +1,18 @@
 const { GRID_SIZE } = require("./constants");
 
 module.exports = {
-  createGameState,
+  initGame,
   gameLoop,
   getUpdatedVelocity,
 };
+
+function initGame() {
+  // for initialisation -> generates random food position
+  const state = createGameState();
+  randomFood(state);
+
+  return state;
+}
 
 function createGameState() {
   return {
@@ -41,8 +49,8 @@ function gameLoop(client, state) {
 
   // Calculate the new position of the snake's head
   const newHeadPosition = {
-    x: playerOne.pos.posX + playerOne.velocity.velX,
-    y: playerOne.pos.posY + playerOne.velocity.velY,
+    x: (playerOne.pos.posX += playerOne.velocity.velX),
+    y: (playerOne.pos.posY += playerOne.velocity.velY),
   };
 
   // Check if the snake's head is out of bounds
@@ -84,7 +92,7 @@ function gameLoop(client, state) {
 }
 
 function randomFood(state) {
-  food = {
+  let food = {
     posX: Math.floor(Math.random() * GRID_SIZE),
     posY: Math.floor(Math.random() * GRID_SIZE),
   };

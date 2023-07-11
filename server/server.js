@@ -1,13 +1,15 @@
 const io = require("socket.io")();
-const { createGameState, gameLoop, getUpdatedVelocity } = require("./game.js");
+const { initGame, gameLoop, getUpdatedVelocity } = require("./game.js");
 const { FRAME_RATE } = require("./constants.js");
+
+const state = {};
+const clientRooms = {};
 
 io.on("connection", (client) => {
   client.emit("init", { data: "test" });
 
-  const state = createGameState();
-
   client.on("keydown", handleKeydown);
+  client.on("newGame", handleNewGame);
 
   function handleKeydown(keyCode) {
     try {
@@ -22,6 +24,19 @@ io.on("connection", (client) => {
     if (velocity) {
       state.player.velocity = velocity;
     }
+  }
+
+  function handleNewGame() {
+    let roomName = makeid(5); // room id
+
+    clientRooms[client.id] = roomName;
+    client.emit("gameCode", roomName);
+
+    state[roomName] = initGame(); // add room to global state + game initialisation
+
+    client.join(roomName);
+    client.number = 1;
+    client.emit("init", 1);
   }
 
   startGameInterval(client, state);
