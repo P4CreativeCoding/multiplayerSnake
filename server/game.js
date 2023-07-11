@@ -16,27 +16,43 @@ function initGame() {
 
 function createGameState() {
   return {
-    player: {
-      pos: {
-        // head position
-        posX: 3,
-        posY: 10,
+    players: [
+      {
+        pos: {
+          // head position
+          posX: 3,
+          posY: 10,
+        },
+        velocity: {
+          velX: 1,
+          velY: 0,
+        },
+        snakeParts: [
+          { x: 1, y: 10 },
+          { x: 2, y: 10 },
+          { x: 3, y: 10 }, // head
+        ],
       },
-      velocity: {
-        velX: 1,
-        velY: 0,
+      {
+        pos: {
+          // head position
+          posX: 18,
+          posY: 10,
+        },
+        velocity: {
+          velX: 1,
+          velY: 0,
+        },
+        snakeParts: [
+          { x: 20, y: 10 },
+          { x: 19, y: 10 },
+          { x: 18, y: 10 }, // head
+        ],
       },
-      snakeParts: [
-        { x: 1, y: 10 },
-        { x: 2, y: 10 },
-        { x: 3, y: 10 }, // head
-      ],
-    },
-    food: {
-      posX: 7,
-      posY: 7,
-    },
+    ],
+    food: {},
     gridSize: GRID_SIZE, // number of pixels in game
+    active: true,
   };
 }
 
@@ -45,38 +61,66 @@ function gameLoop(client, state) {
     return;
   }
 
-  const playerOne = state.player;
+  const playerOne = state.players[0];
+  const playerTwo = state.players[1];
 
-  // Calculate the new position of the snake's head
-  const newHeadPosition = {
-    x: (playerOne.pos.posX += playerOne.velocity.velX),
-    y: (playerOne.pos.posY += playerOne.velocity.velY),
+  // Calculate the new position of the snake's head for P1
+  const newHeadPositionP1 = {
+    x: playerOne.pos.posX + playerOne.velocity.velX,
+    y: playerOne.pos.posY + playerOne.velocity.velY,
   };
 
-  // Check if the snake's head is out of bounds
+  // Calculate the new position of the snake's head for P2
+  const newHeadPositionP2 = {
+    x: playerTwo.pos.posX + playerTwo.velocity.velX,
+    y: playerTwo.pos.posY + playerTwo.velocity.velY,
+  };
+
+  // Check if the snake's head is out of bounds P1
   if (
-    newHeadPosition.x < 0 ||
-    newHeadPosition.x >= GRID_SIZE ||
-    newHeadPosition.y < 0 ||
-    newHeadPosition.y >= GRID_SIZE
+    newHeadPositionP1.x < 0 ||
+    newHeadPositionP1.x >= GRID_SIZE ||
+    newHeadPositionP1.y < 0 ||
+    newHeadPositionP1.y >= GRID_SIZE
   ) {
     return 2;
   }
 
-  // Check if the snake's head collides with its body
+  // Check if the snake's head is out of bounds P2
+  if (
+    newHeadPositionP2.x < 0 ||
+    newHeadPositionP2.x >= GRID_SIZE ||
+    newHeadPositionP2.y < 0 ||
+    newHeadPositionP2.y >= GRID_SIZE
+  ) {
+    return 1;
+  }
+
+  // Check if the snake's head collides with its body P1
   for (let i = 0; i < playerOne.snakeParts.length; i++) {
     const part = playerOne.snakeParts[i];
-    if (part.x === newHeadPosition.x && part.y === newHeadPosition.y) {
+    if (part.x === newHeadPositionP1.x && part.y === newHeadPositionP1.y) {
       return 2;
     }
   }
+  // Check if the snake's head collides with its body P2
+  for (let i = 0; i < playerTwo.snakeParts.length; i++) {
+    const part = playerTwo.snakeParts[i];
+    if (part.x === newHeadPositionP2.x && part.y === newHeadPositionP2.y) {
+      return 1;
+    }
+  }
 
-  // Move the snake's head to the new position
-  playerOne.snakeParts.push(newHeadPosition);
-  playerOne.pos.posX = newHeadPosition.x;
-  playerOne.pos.posY = newHeadPosition.y;
+  // Move the snake's head to the new position P1
+  playerOne.snakeParts.push(newHeadPositionP1);
+  playerOne.pos.posX = newHeadPositionP1.x;
+  playerOne.pos.posY = newHeadPositionP1.y;
+  // Move the snake's head to the new position P2
+  playerTwo.snakeParts.push(newHeadPositionP2);
+  playerTwo.pos.posX = newHeadPositionP2.x;
+  playerTwo.pos.posY = newHeadPositionP2.y;
 
-  // Check if the snake's head collides with the food
+  // Check if the snake's head collides with the food P1
   if (
     state.food.posX === playerOne.pos.posX &&
     state.food.posY === playerOne.pos.posY
@@ -88,6 +132,18 @@ function gameLoop(client, state) {
     playerOne.snakeParts.shift();
   }
 
+  // Check if the snake's head collides with the food P2
+  if (
+    state.food.posX === playerTwo.pos.posX &&
+    state.food.posY === playerTwo.pos.posY
+  ) {
+    // Grow the snake by not removing the tail
+    randomFood(state); // new food
+  } else {
+    // Remove the tail of the snake
+    playerTwo.snakeParts.shift();
+  }
+
   return false;
 }
 
@@ -97,10 +153,18 @@ function randomFood(state) {
     posY: Math.floor(Math.random() * GRID_SIZE),
   };
 
-  // check if position is on snake
-  for (let cell of state.player.snakeParts) {
+  // check if position is on snake 1
+  for (let cell of state.players[0].snakeParts) {
     if (cell.x === food.posX && cell.y === food.posY) {
-      return randomFood(state);
+      food = randomFood(state);
+      break;
+    }
+  }
+  // check if position is on snake 1
+  for (let cell of state.players[1].snakeParts) {
+    if (cell.x === food.posX && cell.y === food.posY) {
+      food = randomFood(state);
+      break;
     }
   }
   state.food = food;

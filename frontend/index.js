@@ -4,6 +4,8 @@ socket.on("init", handleInit);
 socket.on("gameState", handleGamestate);
 socket.on("gameOver", handleGameOver);
 socket.on("gameCode", handleGameCode);
+socket.on("unknownGame", handleUnknownGame);
+socket.on("fullRoom", handleFullRoom);
 
 const BACKGROUND = " #1c0e22";
 const FOOD_COLOUR = "#ffffffff";
@@ -21,6 +23,7 @@ joinGameBtn.addEventListener("click", joinGame);
 
 let canvas, ctx;
 let playerNumber;
+let gameActive = false;
 
 function newGame() {
   socket.emit("newGame");
@@ -29,7 +32,7 @@ function newGame() {
 
 function joinGame() {
   const gameCode = gameCodeInput.value;
-  socket.emit("joinGame", code);
+  socket.emit("joinGame", gameCode);
   init();
 }
 
@@ -46,8 +49,10 @@ function init() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   document.addEventListener("keydown", keydown);
+  gameActive = true;
 }
 
+/*
 // game informations
 let gameState = {
   player: {
@@ -71,7 +76,7 @@ let gameState = {
     posY: 7,
   },
   gridSize: 20, // number of pixels in game
-};
+};*/
 
 function keydown(keyEvent) {
   console.log(keyEvent.keyCode);
@@ -92,8 +97,9 @@ function drawGameCanvas(state) {
   ctx.fillStyle = FOOD_COLOUR;
   ctx.fillRect(food.posX * size, food.posY * size, size, size);
 
-  // paint player
-  drawSnake(state.player, size, SNAKE_COLOUR);
+  // paint players
+  drawSnake(state.players[0], size, SNAKE_COLOUR);
+  drawSnake(state.players[1], size, "red");
 }
 
 function drawSnake(playerState, size, colour) {
@@ -116,11 +122,40 @@ function handleGameCode(gameCode) {
   gameCodeDisplay.innerText = gameCode;
 }
 
-function handleGamestate(gameState) {
-  gameState = JSON.parse(gameState);
-  requestAnimationFrame(() => drawGameCanvas(gameState));
+function handleGamestate(gameStateData) {
+  if (!gameActive) {
+    return;
+  }
+  gameStateData = JSON.parse(gameStateData);
+  requestAnimationFrame(() => drawGameCanvas(gameStateData));
 }
 
-function handleGameOver() {
-  alert("You lose");
+function handleGameOver(data) {
+  if (!gameActive) {
+    return;
+  }
+  if (data.winner === playerNumber) {
+    alert("You won! :D");
+  } else {
+    alert("You lost :(");
+  }
+  gameActive = false;
+}
+
+function handleUnknownGame() {
+  reset();
+  alert("Unknown game code");
+}
+
+function handleFullRoom() {
+  reset();
+  alert("Room is already full");
+}
+
+function reset() {
+  playerNumber = null;
+  gameCodeInput.value = "";
+  gameCodeDisplay.innerText = "";
+  initialScreen.style.display = "block";
+  gameScreen.style.display = "none";
 }
