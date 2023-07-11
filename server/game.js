@@ -36,17 +36,17 @@ function createGameState() {
       {
         pos: {
           // head position
-          posX: 18,
-          posY: 10,
+          posX: 12,
+          posY: 15,
         },
         velocity: {
           velX: 1,
           velY: 0,
         },
         snakeParts: [
-          { x: 20, y: 10 },
-          { x: 19, y: 10 },
-          { x: 18, y: 10 }, // head
+          { x: 1, y: 15 },
+          { x: 2, y: 15 },
+          { x: 3, y: 15 }, // head
         ],
       },
     ],

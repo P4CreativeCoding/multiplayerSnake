@@ -74,7 +74,7 @@ io.on("connection", (client) => {
 
     client.join(gameCode);
     client.number = 2;
-    client.emit("init");
+    client.emit("init", 2);
 
     startGameInterval(gameCode); // start when second player joins
   }
