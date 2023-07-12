@@ -1,6 +1,4 @@
-const socket = io(
-  "https://p4creativecoding.github.io/multiplayerSnake_Hartmann"
-);
+const socket = io();
 
 socket.on("init", handleInit);
 socket.on("gameState", handleGamestate);
